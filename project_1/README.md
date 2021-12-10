@@ -14,7 +14,7 @@ In 2016, the College Board made format, content and scoring changes to the SAT.
 
 With this in mind, the scoring sections are changed from the old format of three sections of Critical Reading, Writing and Math to the updated two sections of Evidence-Based Writing and Reading, and Math. The Essay portion of the SAT which was once part of the Writing section is now completely optional. With these two sections, the structure of the test is also adjusted to fit with the criteria.
 
-The total scoring is then adjusted from the 600-2400 range to the new 400-1600 range. Another change is with regards to the guessing penalty, which was removed instead of the original $ \frac{1}{4} $.
+The total scoring is then adjusted from the 600-2400 range to the new 400-1600 range. Another change is with regards to the guessing penalty, which was removed instead of the original 1/4.
 
 ### Problem Statement
 
