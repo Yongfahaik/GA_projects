@@ -63,13 +63,13 @@ There are 6 datasets utilized that are included in the [`data`](./data/) folder 
 **Key takeaways:** 
 
 1. *The Participation Rates for the SAT and ACT are inversely correlated, as such, when looking at the states with low SAT Participation Rates, these states will be likely to have high ACT Participation Rates.*
-2. *There appears to be no relation between the current year's ACT Participation Rate to the Change in SAT Participation Rate from the current year to the next. As such we cannot use this to identify trends relating to how the Participation Rate will change from year to year.*
+2. *There appears to be no relation between the current year's ACT Participation Rate to the Change in SAT Participation Rate from the current year to the next. Nor does there appear to be any relation between the current year's ACT Composite Score to the Change in the SAT Participation Rate from the current year to the next. As such we cannot use this to identify trends relating to how the Participation Rate will change from year to year.*
 3. *Regarding the states with high ACT Participation Rates, as those states with near 100% ACT Participation Rates have made it compulsory to take ACT, our target states would have to shy away from these as it will be less cost-effective to do so. Taking this into account, our target states chosen for aid by the College Board would be Iowa, Kansas, New Mexico and Arizona as these states have low SAT Participation Rates while not having very high ACT Participation Rates.*
 
 **Recommendations:** 
 
 *By taking a look at the states with the drastic increases in SAT Participation Rates, we discover that these states either just made it compulsory to take the SAT or made it more accessible to the students through various policies. Judging from these successes in increasing the SAT Participation Rates, our recommendations will be as follows:*
-- *Our targeted states for aid would be Iowa, Kansas, New Mexico and Arizona* 
+- *Our targeted states for aid would be Iowa, Kansas and New Mexico* 
   1. *Working with the states to make SAT the compulsory test to take*
   2. *Working with the schools in the states in order to make SAT the more accessible test compared to ACT*
   3. *Covering all or part of the costs for taking the SAT test* 
