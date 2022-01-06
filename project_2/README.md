@@ -84,6 +84,8 @@ By looking at the coefficients for the Final Lasso Regression Model with Polynom
 |**neighborhood_noridge**| Northridge (Physical location within Ames city limits) |
 |**house_1story**| One story (Style of dwelling) |
 
+As such, in the recommendation to the potential house-owner, houses that are in either of `three mentioned neighborhoods of Stone Brook, Northridge Heights and Northridge`, and `One story style of houses` will tend to be of a higher price. For `Lot Area`, `Gr Liv Area` and `Garage Area`, the larger the area, the higher the sale price will tend to be. With regards to the `overall quality` rating of the material and finish of the house, the higher the rating, the higher the sale price. And for the `year built`, newer houses would likely be more expensive than older houses. My client would then be able to take this into account when deciding to buy a house.
+
 --
 
 **Conclusions:** 
