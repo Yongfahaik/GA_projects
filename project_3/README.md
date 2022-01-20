@@ -1,168 +1,132 @@
 # ![](https://ga-dash.s3.amazonaws.com/production/assets/logo-9f88ae6c9c3871690e33280fcf557f33.png) Project 3: Web APIs & NLP
+By Yong Fah Aik
 
-### Description
+### Overview
+[Reddit](https://www.reddit.com) is a network of communities where people can dive into their interests, hobbies and passions. Subreddits are user-created channels where discussion on the topic of interest, hobby or passion are organized. From [Metrics For Reddit](https://frontpagemetrics.com/history), there are over 3.2 million subreddits as of December 2021, with hundreds of subreddits being created every day. 
 
-In week four we've learned about a few different classifiers. In week five we'll learn about webscraping, APIs, and Natural Language Processing (NLP). This project will put those skills to the test.
+### Problem Statement
+As there are many different subreddits on Reddit, and since interests, hobbies and passions can be similar, there are always various subreddits that are similar to each other. Without a doubt, anyone who is new to writing and posting to Reddit can be confused as to which subreddit to post to. 
 
-For project 3, your goal is two-fold:
-1. Using [Pushshift's](https://github.com/pushshift/api) API, you'll collect posts from two subreddits of your choosing.
-2. You'll then use NLP to train a classifier on which subreddit a given post came from. This is a binary classification problem.
+In this project, the aim is to assist the new Reddit user in the decision of which subreddit to make the post in, through the use of classification models based on the analysis of the posts of the subreddits.
 
+For the context of this project, the post is in the form of a scary experience, and the choices of the subreddits the new Reddit user has for making the post are [nosleep](https://www.reddit.com/r/nosleep/) and [paranormal](https://www.reddit.com/r/paranormal/), two subreddits that cater to scary personal experiences and paranormal experiences, thoughts and theories. 
 
-#### About the API
+To determine how successful the classification model is, the **accuracy** of the model as well as the **specificity** of the model will be the defining factors. Choosing accuracy is obvious as having the post going to the wrong subreddit is a bad idea, but choosing specificity as well is due to the fact thatt the `nosleep` subreddit has strict posting requirements, and thus it will be good to reduce the possibility of the post being wrongfully posted to the `nosleep` subreddit and having the post removed.
 
-Pushshift's API is fairly straightforward. For example, if I want the posts from [`/r/boardgames`](https://www.reddit.com/r/boardgames), all I have to do is use the following url: https://api.pushshift.io/reddit/search/submission?subreddit=boardgames
+At the end of this project, by determining the top root word features of each subreddit, we will better assist in the decision-making process of the user based on the given post.
 
-To help you get started, we have a primer video on how to use the API: https://youtu.be/AcrjEWsMi_E
+---
+### Dataset
+In this project, the data of are scraped from the chosen subreddits, [nosleep](https://www.reddit.com/r/nosleep/) and [paranormal](https://www.reddit.com/r/paranormal/), through the use of [PushShift's API](https://github.com/pushshift/api). Data Cleaning is then performed and some preliminary text preprocessing is performed and compiled into a csv for the purpose of this project. The final dataset used can be found in the [`datasets`](./datasets/) folder for this project.
 
-**NOTE:** Pushshift now limits you to 100 posts per request (no longer the 500 in the screencast).
+### Data Dictionary
+The following variables can be found in the final dataset used for the modelling and analysis.
+
+|Feature|Data Type|Description|
+|:--:|:--:|:----------:|
+|**subreddit**| Integer | Target Class, 1 for `r/nosleep`, 0 for `r/Paranormal` |
+|**text**| String | Concatenated string of `title` and `selftext` (body) of post |
+|**text_stop**| String | Variable **text** after tokenizing to extract words and stop words are removed |
+|**text_lem**| String | Variable **text_stop** after lemmatization is performed |
+|**text_stem**| String | Variable **text_stop** after stemming is performed |
 
 ---
 
-### Requirements
+### Executive Summary
 
-- Gather and prepare your data using the `requests` library.
-- **Create and compare at least two models**. One of these must be a Random Forest classifier, however the others can be any classifier of your choosing: logistic regression, KNN, SVM, etc.
-- A Jupyter Notebook with your analysis for a peer audience of data scientists.
-- An executive summary of your results.
-- A short presentation outlining your process and findings for a semi-technical audience.
+**Summary of Models:** 
+The Baseline Model is based on the assumption of taking every post to be of the target subreddit. After that, the modelling of the data is based on the combination of the 2 transformers (**Count Vectorizer** & **Tf-idf Vectorizer**) and the 4 estimators (**Naive Bayes Multinomial**, **Logistics Regression**, **K Neighbors Classification** & **Random Forest Classifier**). GridSearchCV is used to search the various hyperparameters of the models in order to find the best model. 
 
-**Pro Tip:** You can find a good example executive summary [here](https://www.proposify.biz/blog/executive-summary).
+|Model|Transformer|Train Score|Test Score| TN | FP | FN | TP | Specificity | Sensitivity | F1 | ROC AUC |
+|:--:|:--:|:--:|:--:|:--:|:--:|:--:|:--:|:--:|:--:|:--:|:--:|
+|**Baseline**|**None**| 0.431463 | 0.429752 | -- | -- | -- | -- | -- | -- | -- | -- |
+|**Naive Bayes**|**Count Vectorizer**| 0.9466 | 0.9366 | 197 | 10 | 13 | 143 | 0.9517 | 0.9167 | 0.9256 | 0.9342 |
+|**Naive Bayes**|**Tf-idf Vectorizer**| 0.9512 | 0.9477 | 203 | 4 | 15 | 141 | 0.9807 | 0.9038 | 0.9369 | 0.9423 |
+|**Logistics Regression**|**Count Vectorizer**| 0.9991 | 0.9532 | 199 | 8 | 9 | 147 | 0.9614 | 0.9423 | 0.9453 | 0.9518 |
+|**Logistics Regression**|**Tf-idf Vectorizer**| 0.9687 | 0.9559 | 202 | 5 | 11 | 145 | 0.971 | 0.9295 | 0.9477 | 0.9527 |
+|**K Neighbors Classifier**|**Count Vectorizer**| 0.7682 | 0.7824 | 207 | 0 | 79 | 77 | 1.0 | 0.4936 | 0.6609 | 0.7468 |
+|**K Neighbors Classifier**|**Tf-idf Vectorizer**| 0.9218 | 0.865 | 183 | 24 | 25 | 131 | 0.8841 | 0.8397 | 0.8424 | 0.8619 |
+|**Random Forest Classifier**|**Count Vectorizer**| 1.0 | 0.9366 | 197 | 10 | 13 | 143 | 0.9517 | 0.9167 | 0.9256 | 0.9342 |
+|**Random Forest Classifier**|**Tf-idf Vectorizer**| 1.0 | 0.9449 | 200 | 7 | 13 | 143 | 0.9662 | 0.9167 | 0.9346 | 0.9414 |
+
+The Final Model selected based on *accuracy* with *specificity* taken into consideration is the **Logistics Regression** Model with **Tf-idf Vectorizer** transformer.
+
+The GridSearchCV hyperparameters chosen are:    
+'tvec__max_df': 0.7, 'tvec__max_features': 2000, 'tvec__min_df': 1, 'tvec__ngram_range': (1, 1)
+
+|Model Statistics|Scores|
+|:--:|:--:|
+|Test Score| 95.59% |
+|Specificity| 97.1% |
+|Sensitivity| 92.95% |
+|F1 Score| 94.77% |
+|ROC/AUC| 0.9527 |
+|Misclassification| 4.41% |
+
+---
+**Key takeaways:** 
+
+Word Clouds of the two subreddits [Top occuring words after stop words (including common words) are removed]: 
+
+<img src="./images/wordcloud_nosleep.png" width="600" height="400"/>
+<img src="./images/wordcloud_paranormal.png" width="600" height="400"/>
 
 ---
 
-### Necessary Deliverables / Submission
+### Recommendations
 
-- Code must be in at least one clearly commented Jupyter Notebook.
-- A readme/executive summary in markdown.
-- You must submit your slide deck as a PDF.
-- Materials must be submitted by **9:00 AM on Friday, January 21st**.
+By looking at the coefficients for the Final Model, we arrived at the following 20 word features with the highest values and the lowest values for their coefficients. 
 
----
+|r/nosleep|r/Paranormal|
+|:--:|:--:|
+| hand | experiment |
+| eye | spirit |
+| blood | anyone |
+| want | haunt |
+| said | happen |
+| scream | experience |
+| wait | ghost |
+| head | weird |
+| try | room |
+| let | saw |
+| began | cat |
+| fuck | idk |
+| day | post |
+| came | skeptic |
+| everything | bed |
+| knew | bedroom |
+| slowly | story |
+| took | active |
+| face | dream |
+| leave | live |
 
-## Rubric
-Your local instructor will evaluate your project (for the most part) using the following criteria.  You should make sure that you consider and/or follow most if not all of the considerations/recommendations outlined below **while** working through your project.
+As such, through the comparison of the given post with the above word features, the reddit user is now more capable of making a better decision in which subreddit to post to.
 
-For Project 3 the evaluation categories are as follows:<br>
-**The Data Science Process**
-- Problem Statement
-- Data Collection
-- Data Cleaning & EDA
-- Preprocessing & Modeling
-- Evaluation and Conceptual Understanding
-- Conclusion and Recommendations
+**Misclassifications:** 
+Type I Errors (False Positives): 
+For `r/Paranormal` posts wrongly predicted as `r/nosleep`, misclassification may be due to use of words 'said' & 'face' that are related to `r/nosleep`.
 
-**Organization and Professionalism**
-- Organization
-- Visualizations
-- Python Syntax and Control Flow
-- Presentation
-
-**Scores will be out of 30 points based on the 10 categories in the rubric.** <br>
-*3 points per section*<br>
-
-| Score | Interpretation |
-| --- | --- |
-| **0** | *Project fails to meet the minimum requirements for this item.* |
-| **1** | *Project meets the minimum requirements for this item, but falls significantly short of portfolio-ready expectations.* |
-| **2** | *Project exceeds the minimum requirements for this item, but falls short of portfolio-ready expectations.* |
-| **3** | *Project meets or exceeds portfolio-ready expectations; demonstrates a thorough understanding of every outlined consideration.* |
-
-
-### The Data Science Process
-
-**Problem Statement**
-- Is it clear what the goal of the project is?
-- What type of model will be developed?
-- How will success be evaluated?
-- Is the scope of the project appropriate?
-- Is it clear who cares about this or why this is important to investigate?
-- Does the student consider the audience and the primary and secondary stakeholders?
-
-**Data Collection**
-- Was enough data gathered to generate a significant result?
-- Was data collected that was useful and relevant to the project?
-- Was data collection and storage optimized through custom functions, pipelines, and/or automation?
-- Was thought given to the server receiving the requests such as considering number of requests per second?
-
-**Data Cleaning and EDA**
-- Are missing values imputed/handled appropriately?
-- Are distributions examined and described?
-- Are outliers identified and addressed?
-- Are appropriate summary statistics provided?
-- Are steps taken during data cleaning and EDA framed appropriately?
-- Does the student address whether or not they are likely to be able to answer their problem statement with the provided data given what they've discovered during EDA?
-
-**Preprocessing and Modeling**
-- Is text data successfully converted to a matrix representation?
-- Are methods such as stop words, stemming, and lemmatization explored?
-- Does the student properly split and/or sample the data for validation/training purposes?
-- Does the student test and evaluate a variety of models to identify a production algorithm (**AT MINIMUM:** Random Forest and one other model)?
-- Does the student defend their choice of production model relevant to the data at hand and the problem?
-- Does the student explain how the model works and evaluate its performance successes/downfalls?
-
-**Evaluation and Conceptual Understanding**
-- Does the student accurately identify and explain the baseline score?
-- Does the student select and use metrics relevant to the problem objective?
-- Does the student interpret the results of their model for purposes of inference?
-- Is domain knowledge demonstrated when interpreting results?
-- Does the student provide appropriate interpretation with regards to descriptive and inferential statistics?
-
-**Conclusion and Recommendations**
-- Does the student provide appropriate context to connect individual steps back to the overall project?
-- Is it clear how the final recommendations were reached?
-- Are the conclusions/recommendations clearly stated?
-- Does the conclusion answer the original problem statement?
-- Does the student address how findings of this research can be applied for the benefit of stakeholders?
-- Are future steps to move the project forward identified?
-
-
-### Organization and Professionalism
-
-**Project Organization**
-- Are modules imported correctly (using appropriate aliases)?
-- Are data imported/saved using relative paths?
-- Does the README provide a good executive summary of the project?
-- Is markdown formatting used appropriately to structure notebooks?
-- Are there an appropriate amount of comments to support the code?
-- Are files & directories organized correctly?
-- Are there unnecessary files included?
-- Do files and directories have well-structured, appropriate, consistent names?
-
-**Visualizations**
-- Are sufficient visualizations provided?
-- Do plots accurately demonstrate valid relationships?
-- Are plots labeled properly?
-- Are plots interpreted appropriately?
-- Are plots formatted and scaled appropriately for inclusion in a notebook-based technical report?
-
-**Python Syntax and Control Flow**
-- Is care taken to write human readable code?
-- Is the code syntactically correct (no runtime errors)?
-- Does the code generate desired results (logically correct)?
-- Does the code follows general best practices and style guidelines?
-- Are Pandas functions used appropriately?
-- Are `sklearn` and `NLTK` methods used appropriately?
-
-**Presentation**
-- Is the problem statement clearly presented?
-- Does a strong narrative run through the presentation building toward a final conclusion?
-- Are the conclusions/recommendations clearly stated?
-- Is the level of technicality appropriate for the intended audience?
-- Is the student substantially over or under time?
-- Does the student appropriately pace their presentation?
-- Does the student deliver their message with clarity and volume?
-- Are appropriate visualizations generated for the intended audience?
-- Are visualizations necessary and useful for supporting conclusions/explaining findings?
-
+Type II Errors (False Negatives):
+For `r/nosleep` posts wrongly predicted as `r/Paranormal`, misclassification may be due to use of words 'room', 'post', 'bed', 'cat', 'grandpa' that are related to `r/Paranormal`. Also, it should be noted that the misclassed posts also contain various non-English words that may skew the predictions.
 
 ---
 
-### Why did we choose this project for you?
-This project covers three of the biggest concepts we cover in the class: Classification Modeling, Natural Language Processing and Data Wrangling/Acquisition.
+### Conclusions 
 
-Part 1 of the project focuses on **Data wrangling/gathering/acquisition**. This is a very important skill as not all the data you will need will be in clean CSVs or a single table in SQL.  There is a good chance that wherever you land you will have to gather some data from some unstructured/semi-structured sources; when possible, requesting information from an API, but often scraping it because they don't have an API (or it's terribly documented).
+The final model chosen for this project is the `Logistics Regression` model with the `Tfidf Vectorizer` transformer, with an accuracy score of `95.59%` and a specificity score of `97.58%`. 
 
-Part 2 of the project focuses on **Natural Language Processing** and converting standard text data (like Titles and Comments) into a format that allows us to analyze it and use it in modeling.
+Even though these scores are impressive, it should be noted that all of the models are based on their default parameters. These meant that there can be further improvements to the model if the parameters of the model are also adjusted to be optimal. In this case, this may be important as the default model may not be the best even though adjustments have been made in the Grid Search process to alter the parameters of the transformer. Of course, the time taken to complete each Grid Search will be exponentially increased, and thus this might not be the best way to conduct this process of optimization.
 
-Part 3 of the project focuses on **Classification Modeling**.  Given that project 2 was a regression focused problem, we needed to give you a classification focused problem to practice the various models, means of assessment and preprocessing associated with classification.   
+In the future, it might be good to reduce the amount of parameters chosen for the transformer and add the parameters for the model into the modelling process to refine the models in order to decide on the best model possible for the purpose of classification.
+
+--
+
+Due to the time constraint, it should be noted that text analysis is based on the text after stemming is done on it, and the model is thus based on those text. As `Porter Stemmer` is an aggressive form of text processing, the words generated may be inaccurate to their original meaning or even indecipherable at first glance. 
+
+For future work, further analysis can be done on the other forms of pre-processing of the text, which includes no stemming or lemmatization, and other forms of text lemmatization or stemming.
+
+--
+
+While it can be seen that the final model is doing quite well for the two subreddits chosen, there is an inherent issue here. The two subreddits chosen are of the text-heavy variety and they are not entirely similar in terms of the topic of interest. This means that the adaptation of this model to other subreddits may not work out that well. It should also be noted that there are usually more than two subreddits that are quite similar to each other, and since this model is currently catered towards working with two subreddits, that means more work to be done in the selection of the model.
+
+For future progress, the aim is to work towards adapting this model to a subreddit that is less text-heavy as well as adapting to subreddits that are very similar to each other would be more useful to the user. After that, it might be prudent to work towards multi-classification which is currently beyond the scope of this project.
