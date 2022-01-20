@@ -102,11 +102,11 @@ By looking at the coefficients for the Final Model, we arrived at the following 
 
 As such, through the comparison of the given post with the above word features, the reddit user is now more capable of making a better decision in which subreddit to post to.
 
-**Misclassifications:** 
-Type I Errors (False Positives): 
+**Misclassifications:**    
+Type I Errors (False Positives):    
 For `r/Paranormal` posts wrongly predicted as `r/nosleep`, misclassification may be due to use of words 'said' & 'face' that are related to `r/nosleep`.
 
-Type II Errors (False Negatives):
+Type II Errors (False Negatives):   
 For `r/nosleep` posts wrongly predicted as `r/Paranormal`, misclassification may be due to use of words 'room', 'post', 'bed', 'cat', 'grandpa' that are related to `r/Paranormal`. Also, it should be noted that the misclassed posts also contain various non-English words that may skew the predictions.
 
 ---
